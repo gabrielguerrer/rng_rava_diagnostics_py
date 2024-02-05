@@ -22,7 +22,7 @@ jobs:
     
     environment:
       name: pypi
-      url: https://pypi.org/p/rng_rava_diagnostics
+      url: https://pypi.org/p/rng_rava_diag
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
 
