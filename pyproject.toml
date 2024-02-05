@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rng_rava_diag"
+version = "1.0.0"
+authors = [
+  { name="Gabriel Guerrer", email="gabrielguerrer@gmail.com" },
+]
+description = "RAVA Python Diagnostics"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [    
+    "rng_rava",
+    "numpy",
+    "matplotlib",
+    "scipy",
+    "lmfit"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/gabrielguerrer/rng_rava_diagnostics_py"
