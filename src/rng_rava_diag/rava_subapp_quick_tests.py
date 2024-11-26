@@ -5,12 +5,12 @@ Distributed under the MIT license - See LICENSE for details
 """
 
 """
-The Quick Tests sub-app comprises statistical tests conducted on relatively 
-small samples generated in real-time to detect significant errors within the 
+The Quick Tests sub-app comprises statistical tests conducted on relatively
+small samples generated in real-time to detect significant errors within the
 RAVA circuit.
 
-For a more comprehensive assessment, generate randomness files using the 
-Acquisition sub-app and subsequently analyze them using the Detailed Tests 
+For a more comprehensive assessment, generate randomness files using the
+Acquisition sub-app and subsequently analyze them using the Detailed Tests
 sub-app.
 """
 
@@ -54,10 +54,10 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
 
         # Windows
         self.win_progress = WIN_PROGRESS(self)
-        self.win_progress.hide()        
+        self.win_progress.hide()
 
         # Widgets
-        self.nb = ttk.Notebook(self, padding=PAD)        
+        self.nb = ttk.Notebook(self, padding=PAD)
         self.nb.grid(row=0, column=0, sticky='nsew')
 
         self.frm_pcs = ttk.Frame(self, name='pulse_counts', padding=(0,PAD))
@@ -107,8 +107,8 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
 
 
     def pcs_widgets(self):
-        self.frm_pcs.columnconfigure([0,1,2,3], weight=1)        
-        self.frm_pcs.rowconfigure([0,1,2,3], weight=1)
+        self.frm_pcs.columnconfigure([0,1,2,3], weight=1)
+        self.frm_pcs.rowconfigure([0,1], weight=1)
 
         ## Parameters
         self.lb_pcs_n = ttk.Label(self.frm_pcs, text='N PCs')
@@ -128,7 +128,7 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
         self.bt_pcs_test = ttk.Button(self.frm_pcs, text='Test', width=16, command=self.pcs_test)
         self.bt_pcs_test.grid(row=1, column=0, columnspan=4)
 
-    
+
     def bytes_widgets(self):
         self.frm_bytes.columnconfigure([0,1,2], weight=1)
         self.frm_bytes.rowconfigure([0,1,2,3,4], weight=1)
@@ -178,11 +178,11 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
         self.frm_nums.rowconfigure([0,1,2,3,4], weight=1)
 
         ## Parameters
-        
+
         # Nums type
         self.lb_nums_type = ttk.Label(self.frm_nums, text='Type')
         self.lb_nums_type.grid(row=0, column=0, sticky='w', padx=(2*PAD,0))
-        
+
         self.cbb_nums_type = ttk.Combobox(self.frm_nums, width=9)
         self.cbb_nums_type.grid(row=0, column=1, sticky='w')
         self.cbb_nums_type.state(['readonly'])
@@ -228,7 +228,7 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
         ## Tests
         self.bt_nums_test = ttk.Button(self.frm_nums, text='Test', command=self.nums_test)
         self.bt_nums_test.grid(row=4, column=0, columnspan=4)
-        
+
 
     def pwm_widgets(self):
         self.frm_pwm.columnconfigure([0,1,2,3], weight=1)
@@ -288,13 +288,13 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
         ## Tests
         self.bt_pwm_test = ttk.Button(self.frm_pwm, text='Test', command=self.pwm_test)
         self.bt_pwm_test.grid(row=4, column=0, columnspan=4)
-    
+
 
     def pcs_test(self):
         # Read vars
         n_pcs = int(get_ammount_prefix_number(n=self.var_pcs_n.get(), prefix=self.cbb_pcs_n_prefix.get()))
         rng_out = 'AB'
-        n_chunk = self.master.cfg_read('ACQUISITION', 'chunk_bytes', int)
+        n_chunk = self.cfg.read('ACQUISITION', 'chunk_bytes', int)
 
         # Info
         self.lg.info('{}: Pulse Count - Distribution Test'.format(self.name))
@@ -308,9 +308,9 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
         self.win_progress.show()
 
         # Acquire
-        outputs, progress, time_str = self.rng_acq.get_pulse_counts(rng=self.rng, n_pcs=n_pcs, n_chunk=n_chunk, 
+        outputs, progress, time_str = self.rng_acq.get_pulse_counts(rng=self.rng, n_pcs=n_pcs, n_chunk=n_chunk,
                                         rng_out=rng_out, out_file=False, threaded=False)
-       
+
         # Hide win progress
         self.win_progress.hide()
 
@@ -323,17 +323,19 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
 
         # Perform tests
         pcs_a, pcs_b = outputs
+
         fig = tests_pcs.pcs_quick_test(pcs_a, pcs_b, rng_setup_str)
         fig.show()
         self.plots.append(fig)
 
 
-    def bytes_test(self):
+    def bytes_test(self):        
+        get_ammount_prefix_number(n=self.var_bytes_n.get(), prefix=self.cbb_bytes_n_prefix.get())
         # Read vars
         n_bytes = int(get_ammount_prefix_number(n=self.var_bytes_n.get(), prefix=self.cbb_bytes_n_prefix.get()))
         postproc = self.cbb_bytes_postproc.get()
         rng_out = 'AB'
-        n_chunk = self.master.cfg_read('ACQUISITION', 'chunk_bytes', int)
+        n_chunk = self.cfg.read('ACQUISITION', 'chunk_bytes', int)
 
         # Info
         self.lg.info('{}: Bytes - Bias/Correl Tests'.format(self.name))
@@ -342,9 +344,9 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
         self.win_progress.show()
 
         # Acquire
-        outputs, progress, time_str = self.rng_acq.get_bytes(rng=self.rng, n_bytes=n_bytes, n_chunk=n_chunk, 
+        outputs, progress, time_str = self.rng_acq.get_bytes(rng=self.rng, n_bytes=n_bytes, n_chunk=n_chunk,
                                         postproc=postproc, rng_out=rng_out, out_file=False, threaded=False)
-       
+
         # Hide win progress
         self.win_progress.hide()
 
@@ -394,7 +396,7 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
         n_nums = int(get_ammount_prefix_number(n=self.var_nums_n.get(), prefix=self.cbb_nums_n_prefix.get()))
         num_min = self.var_nums_range_min.get()
         num_max = self.var_nums_range_max.get()
-        n_chunk = self.master.cfg_read('ACQUISITION', 'chunk_numbers', int)
+        n_chunk = self.cfg.read('ACQUISITION', 'chunk_numbers', int)
 
         float_bins = self.var_nums_float_bins.get()
         if num_type is float and float_bins <= 0:
@@ -408,10 +410,10 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
         self.win_progress.show()
 
         # Acquire
-        outputs, progress, time_str = self.rng_acq.get_numbers(rng=self.rng, n_nums=n_nums, n_chunk=n_chunk, 
-                                        num_type=num_type, num_min=num_min, num_max=num_max, out_file=False, 
+        outputs, progress, time_str = self.rng_acq.get_numbers(rng=self.rng, n_nums=n_nums, n_chunk=n_chunk,
+                                        num_type=num_type, num_min=num_min, num_max=num_max, out_file=False,
                                         threaded=False)
-       
+
         # Hide win progress
         self.win_progress.hide()
 
@@ -425,7 +427,7 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
         # Perform tests
         nums = outputs[0]
         fig = tests_nums.nums_quick_test(nums, num_type, num_min, num_max, float_bins)
-        fig.show()    
+        fig.show()
         self.plots.append(fig)
 
 
@@ -441,7 +443,7 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
             self.var_pwm_dc_step.set(2)
 
 
-    def pwm_test(self):        
+    def pwm_test(self):
         # Read vars
         pwm_freq = self.cbb_pwm_freq.get()
         pwm_freq_id = D_PWM_FREQ[pwm_freq]
@@ -475,7 +477,7 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
 
         # Configure RNG Sampling interval
         self.rng.snd_rng_setup(sampling_interval_us=si)
-        
+
         # Show progress window
         with self.win_progress:
 
@@ -484,7 +486,7 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
             for i, dc in enumerate(pwm_dc_range):
 
                 # Configure PWM
-                self.rng.snd_pwm_setup(freq_id=pwm_freq_id, duty=dc)    
+                self.rng.snd_pwm_setup(freq_id=pwm_freq_id, duty=dc)
 
                 # Generate PCs
                 pcs_a[i], pcs_b[i] = self.rng.get_rng_pulse_counts(n_counts=n_pcs, output_type='array', timeout=None)
@@ -500,14 +502,14 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
         # Restore RNG initial config
         self.rng.snd_rng_setup(**si_init)
         self.rng.snd_pwm_setup(**pwm_init)
-       
+
         # Close progress window
         self.win_progress.hide()
 
         # Canceled?
         if canceled:
             return
-        
+
         # Perform tests
         fig = tests_pwm.pwm_test(pcs_a, pcs_b, si, pwm_freq, pwm_dc_range)
         fig.show()
@@ -515,7 +517,7 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
 
 
 rava_subapp_quick_tests = {'class': RAVA_SUBAPP_QUICK_TESTS,
-                            'menu_title': 'Quick Tests',
-                            'show_button': True,
-                            'use_rng': True
-                            }
+                           'menu_title': 'Quick Tests',
+                           'show_button': True,
+                           'use_rng': True
+                           }

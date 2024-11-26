@@ -37,7 +37,7 @@ def pcs_thbias():
     # Calculate Theoretical Bias
     bias = np.zeros(shape=(len(mu_range), len(std_range)), dtype=np.float64)
     for i, mu_ in enumerate(mu_range):
-        for j, std_ in enumerate(std_range):    
+        for j, std_ in enumerate(std_range):
             bias[i, j] = tools.theoretical_bit_bias(mu_, std_)
 
     # Replace 0 with the min value -> caused by the float64 precision
@@ -70,7 +70,7 @@ def pcs_quick_test(pcs_1d_a, pcs_1d_b, rng_setup_str=''):
     res_dict_a = tools.fit_normal(pcs_1d_a)
     chi2p_a = res_dict_a['chi2p']
     norm_mu_a, norm_std_a, norm_c_a = res_dict_a['fit_pars']
-    pcs_hist_a, pcs_hist_fit_a, pcs_err_fit_a, pcs_bins_a, pcs_bins_mid_a = res_dict_a['hist_values']     
+    pcs_hist_a, pcs_hist_fit_a, pcs_err_fit_a, pcs_bins_a, pcs_bins_mid_a = res_dict_a['hist_values']
     lbl_a = 'RNG A: mu={:.2f}, std={:.2f}; chi2_p={:.1f}%'.format(norm_mu_a, norm_std_a, chi2p_a)
 
     # PCs B: Fit histogram
@@ -99,7 +99,7 @@ def pcs_quick_test(pcs_1d_a, pcs_1d_b, rng_setup_str=''):
     ymin_2, ymax_2 = ax2.get_ylim()
     ax2.set_ylim(ymin_2, 1.1 * ymax_2)
     ax2.legend(loc='upper right', bbox_to_anchor=(1., 1.))
-    
+
     return fig
 
 
@@ -112,7 +112,7 @@ def pcs_fit_normal(pcs_2d):
 
     for i in range(n_repeat):
         pcs = pcs_2d[i,:]
-        
+
         # Fit to normal distrib
         res_dict = tools.fit_normal(pcs)
         chi2p[i] = res_dict['chi2p']

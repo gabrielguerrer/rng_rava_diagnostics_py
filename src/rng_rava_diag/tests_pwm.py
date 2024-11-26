@@ -5,7 +5,7 @@ Distributed under the MIT license - See LICENSE for details
 """
 
 """
-This file encompasses the code of the PWM tests performed by the Quick 
+This file encompasses the code of the PWM tests performed by the Quick
 Tests sub-app.
 """
 
@@ -24,7 +24,7 @@ def pwm_test(pcs_a, pcs_b, sampling_interval, pwm_freq, pwm_dc_range):
     ax.set_xlabel('Duty Cycle')
     ax.set_ylabel('PC mean')
     ax.plot(pwm_dc_range, pcs_m_a, marker='o', color='black', label='A')
-    ax.plot(pwm_dc_range, pcs_m_b, marker='o', color='gray', label='B')        
-    ax.legend(loc='upper right', bbox_to_anchor=(1.0, 1.0))        
+    ax.plot(pwm_dc_range, pcs_m_b, marker='o', color='gray', label='B')
+    ax.legend(loc='upper right', bbox_to_anchor=(1.0, 1.0))
 
     return fig

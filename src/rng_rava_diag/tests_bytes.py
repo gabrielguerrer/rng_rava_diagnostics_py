@@ -5,7 +5,7 @@ Distributed under the MIT license - See LICENSE for details
 """
 
 """
-This file encompasses the code of the Bytes statistical tests performed 
+This file encompasses the code of the Bytes statistical tests performed
 by the Quick and Detailed Tests sub-apps.
 """
 
@@ -34,7 +34,7 @@ def bytes_quick_test_bit_bias(bytes_a, bytes_b):
     lbl_b = 'B: b={:.3f}%; p={:.1f}%'.format(bias_b, p_b*100)
 
     # 95% confidence interval
-    ci95, interval = rt.binom_interval(.95, binom_n=n_bits, binom_p=0.5)    
+    ci95, interval = rt.binom_interval(.95, binom_n=n_bits, binom_p=0.5)
     ci95 = [(ci95[0]/n_bits - 0.5)*100, (ci95[1]/n_bits - 0.5)*100]
     lbl_bounds = '{:.1f}% CI'.format(interval*100)
 
@@ -48,7 +48,7 @@ def bytes_quick_test_bit_bias(bytes_a, bytes_b):
     ax.plot([0], bias_a, ls='none', marker='o', color='black', label=lbl_a)
     ax.plot([0], bias_b, ls='none', marker='o', color='gray', label=lbl_b)
     ax.hlines(ci95, -0.4, 0.4, ls='dashed', lw=1, color='black', label=lbl_bounds)
-    ax.legend(loc='upper right', bbox_to_anchor=(1.2, 0.9))        
+    ax.legend(loc='upper right', bbox_to_anchor=(1.2, 0.9))
 
     return fig
 
@@ -81,21 +81,21 @@ def bytes_quick_test_byte_bias(bytes_a, bytes_b):
     # Plot
     fig, ax = plt.subplots(1, 1, tight_layout=True, figsize=(7, 5))
     ax.set_title('Byte bias, n_bytes={}, dof={}'.format(get_ammount_prefix_str(n_bytes), n_dof), loc='left')
-    ax.set_xlabel('Categories')        
-    ax.set_ylabel('N')        
+    ax.set_xlabel('Categories')
+    ax.set_ylabel('N')
     ax.plot(x, hist_a, ls='none', marker='o', ms=3, color='black', label=lbl_a)
     ax.plot(x, hist_b, ls='none', marker='o', ms=3, color='gray', label=lbl_b)
     ax.hlines(ci95, 0, 255, ls='dashed', lw=1, color='black', label=lbl_bounds)
     ax.legend(loc='upper right', bbox_to_anchor=(1.0, 1.0))
 
     ax2 = ax.twinx()
-    ax2.plot(np.NaN, np.NaN, ls='none', marker='o', ms=3, color='black', label=lbl2_a)
-    ax2.plot(np.NaN, np.NaN, ls='none', marker='o', ms=3, color='gray', label=lbl2_b)
+    ax2.plot(np.nan, np.nan, ls='none', marker='o', ms=3, color='black', label=lbl2_a)
+    ax2.plot(np.nan, np.nan, ls='none', marker='o', ms=3, color='gray', label=lbl2_b)
     ax2.get_yaxis().set_visible(False)
     ax2.legend(loc='lower left', bbox_to_anchor=(0, 0))
 
     return fig
-    
+
 
 def bytes_quick_test_correls(bytes_a, bytes_b):
     # Calculate
@@ -134,11 +134,11 @@ def bytes_calc(bytes):
     sc = np.zeros(n_tests, dtype=np.float64)
 
     # Loop and calculate
-    for i in range(n_tests):    
+    for i in range(n_tests):
         bias[i], _ = rt.bit_bias(bytes[i])
         bias[i] *= 100
         chi2[i], _ = rt.byte_bias(bytes[i])
-        sc[i] = rt.serial_correl(bytes[i], 1) * 100        
+        sc[i] = rt.serial_correl(bytes[i], 1) * 100
 
     return bias, chi2, sc
 
@@ -151,9 +151,9 @@ def bytes_calc_corr(bytes_a, bytes_b):
     corr = np.zeros(n_tests, dtype=np.float64)
 
     # Loop and calculate
-    for i in range(n_tests):    
+    for i in range(n_tests):
         corr[i] = rt.correl_2arrays(bytes_a[i], bytes_b[i]) * 100
-        
+
     return corr
 
 
@@ -161,7 +161,7 @@ def bytes_detailed_test(bytes_2d_a, bytes_2d_b, n_fit_bins):
     # Calc vars
     n_tests = bytes_2d_a.shape[0]
     n_bytes = bytes_2d_a.shape[1]
-    
+
     pool = ProcessPoolExecutor()
     fut_a = pool.submit(bytes_calc, bytes_2d_a)
     fut_b = pool.submit(bytes_calc, bytes_2d_b)
@@ -170,9 +170,9 @@ def bytes_detailed_test(bytes_2d_a, bytes_2d_b, n_fit_bins):
     bias_a, chi2_a, sc_a = fut_a.result()
     bias_b, chi2_b, sc_b = fut_b.result()
     corr_ab = fut_c.result()
-    
+
     #########################
-    # Bit bias    
+    # Bit bias
 
     # RNG A
     bias_dict_a = rt.fit_normal(bias_a, n_bins=n_fit_bins)
@@ -180,9 +180,9 @@ def bytes_detailed_test(bytes_2d_a, bytes_2d_b, n_fit_bins):
     bias_fit_mu_a, bias_fit_std_a, bias_fit_c_a = bias_dict_a['fit_pars']
     bias_fit_mu_err_a, bias_fit_std_err_a, bias_fit_c_err_a = bias_dict_a['fit_pars_stderr']
     bias_hist_a, bias_hist_fit_a, bias_err_fit_a, bias_bins_a, bias_bins_mid_a = bias_dict_a['hist_values']
-    
+
     lbl_bias_a = 'A: mu={:.4f} +- {:.4f}; std={:.4f} +- {:.4f}; \nc={:.0f}+- {:.0f} ; p={:.2f}%' \
-                 .format(bias_fit_mu_a, 1.96*bias_fit_mu_err_a, bias_fit_std_a, 1.96 * bias_fit_std_err_a, 
+                 .format(bias_fit_mu_a, 1.96*bias_fit_mu_err_a, bias_fit_std_a, 1.96 * bias_fit_std_err_a,
                     bias_fit_c_a, 1.96 * bias_fit_c_err_a, bias_fit_chi2p_a)
 
     # RNG B
@@ -191,9 +191,9 @@ def bytes_detailed_test(bytes_2d_a, bytes_2d_b, n_fit_bins):
     bias_fit_mu_b, bias_fit_std_b, bias_fit_c_b = bias_dict_b['fit_pars']
     bias_fit_mu_err_b, bias_fit_std_err_b, bias_fit_c_err_b = bias_dict_b['fit_pars_stderr']
     bias_hist_b, bias_hist_fit_b, bias_err_fit_b, bias_bins_b, bias_bins_mid_b = bias_dict_b['hist_values']
-    
+
     lbl_bias_b = 'B: mu={:.4f} +- {:.4f}; std={:.4f} +- {:.4f}; \nc={:.0f}+- {:.0f} ; p={:.2f}%'\
-                 .format(bias_fit_mu_b, 1.96*bias_fit_mu_err_b, bias_fit_std_b, 1.96 * bias_fit_std_err_b, 
+                 .format(bias_fit_mu_b, 1.96*bias_fit_mu_err_b, bias_fit_std_b, 1.96 * bias_fit_std_err_b,
                     bias_fit_c_b, 1.96 * bias_fit_c_err_b, bias_fit_chi2p_b)
 
     #########################
@@ -207,7 +207,7 @@ def bytes_detailed_test(bytes_2d_a, bytes_2d_b, n_fit_bins):
     chi2_fit_dof_a, chi2_fit_c_a = chi2_dict_a['fit_pars']
     chi2_fit_dof_err_a, chi2_fit_c_err_a = chi2_dict_a['fit_pars_stderr']
     chi2_hist_a, chi2_hist_fit_a, chi2_err_fit_a, chi2_bins_a, chi2_bins_mid_a = chi2_dict_a['hist_values']
-    
+
     lbl_chi2_a = 'A: dof={:.2f} +- {:.2f}; \nc={:.0f} +- {:.0f}; p={:.2f}%' \
             .format(chi2_fit_dof_a, 1.96*chi2_fit_dof_err_a, chi2_fit_c_a, 1.96 * chi2_fit_c_err_a, chi2_fit_chi2p_a)
 
@@ -217,7 +217,7 @@ def bytes_detailed_test(bytes_2d_a, bytes_2d_b, n_fit_bins):
     chi2_fit_dof_b, chi2_fit_c_b = chi2_dict_b['fit_pars']
     chi2_fit_dof_err_b, chi2_fit_c_err_b = chi2_dict_b['fit_pars_stderr']
     chi2_hist_b, chi2_hist_fit_b, chi2_err_fit_b, chi2_bins_b, chi2_bins_mid_b = chi2_dict_b['hist_values']
-    
+
     lbl_chi2_b = 'B: dof={:.2f} +- {:.2f}; \nc={:.0f} +- {:.0f}; p={:.2f}%' \
             .format(chi2_fit_dof_b, 1.96*chi2_fit_dof_err_b, chi2_fit_c_b, 1.96 * chi2_fit_c_err_b, chi2_fit_chi2p_b)
 
@@ -231,20 +231,20 @@ def bytes_detailed_test(bytes_2d_a, bytes_2d_b, n_fit_bins):
     sc_fit_mu_a, sc_fit_std_a, sc_fit_c_a = sc_dict_a['fit_pars']
     sc_fit_mu_err_a, sc_fit_std_err_a, sc_fit_c_err_a = sc_dict_a['fit_pars_stderr']
     sc_hist_a, sc_hist_fit_a, sc_err_fit_a, sc_bins_a, sc_bins_mid_a = sc_dict_a['hist_values']
-    
+
     lbl_sc_a = 'A: mu={:.4f} +- {:.4f}; std={:.4f} +- {:.4f}; \nc={:.0f}+- {:.0f} ; p={:.2f}%' \
-                 .format(sc_fit_mu_a, 1.96*sc_fit_mu_err_a, sc_fit_std_a, 1.96 * sc_fit_std_err_a, 
+                 .format(sc_fit_mu_a, 1.96*sc_fit_mu_err_a, sc_fit_std_a, 1.96 * sc_fit_std_err_a,
                     sc_fit_c_a, 1.96 * sc_fit_c_err_a, sc_fit_chi2p_a)
-    
+
     # RNG B
     sc_dict_b = rt.fit_normal(sc_b, n_bins=n_fit_bins)
     sc_fit_chi2p_b = sc_dict_b['chi2p']
     sc_fit_mu_b, sc_fit_std_b, sc_fit_c_b = sc_dict_b['fit_pars']
     sc_fit_mu_err_b, sc_fit_std_err_b, sc_fit_c_err_b = sc_dict_b['fit_pars_stderr']
     sc_hist_b, sc_hist_fit_b, sc_err_fit_b, sc_bins_b, sc_bins_mid_b = sc_dict_b['hist_values']
-    
+
     lbl_sc_b = 'B: mu={:.4f} +- {:.4f}; std={:.4f} +- {:.4f}; \nc={:.0f}+- {:.0f} ; p={:.2f}%' \
-                 .format(sc_fit_mu_b, 1.96*sc_fit_mu_err_b, sc_fit_std_b, 1.96 * sc_fit_std_err_b, 
+                 .format(sc_fit_mu_b, 1.96*sc_fit_mu_err_b, sc_fit_std_b, 1.96 * sc_fit_std_err_b,
                     sc_fit_c_b, 1.96 * sc_fit_c_err_b, sc_fit_chi2p_b)
 
     # RNG A vs RNG B
@@ -253,14 +253,14 @@ def bytes_detailed_test(bytes_2d_a, bytes_2d_b, n_fit_bins):
     corr_fit_mu, corr_fit_std, corr_fit_c = corr_dict['fit_pars']
     corr_fit_mu_err, corr_fit_std_err, corr_fit_c_err = corr_dict['fit_pars_stderr']
     corr_hist, corr_hist_fit, corr_err_fit, corr_bins, corr_bins_mid = corr_dict['hist_values']
-    
+
     lbl_corr = 'AxB: mu={:.4f} +- {:.4f}; std={:.4f} +- {:.4f}; \nc={:.0f}+- {:.0f} ; p={:.2f}%' \
-                  .format(corr_fit_mu, 1.96*corr_fit_mu_err, corr_fit_std, 1.96 * corr_fit_std_err, 
+                  .format(corr_fit_mu, 1.96*corr_fit_mu_err, corr_fit_std, 1.96 * corr_fit_std_err,
                     corr_fit_c, 1.96 * corr_fit_c_err, corr_fit_chi2p)
-    
+
     #########################
     ## Plots
-    
+
     # Bit Bias
     fig1, (ax1, ax2) = plt.subplots(1, 2, tight_layout=True, figsize=(10, 4))
     ax1.set_title('Bit Bias Distribution, n_tests={}, n_bits/test={}'
@@ -268,7 +268,7 @@ def bytes_detailed_test(bytes_2d_a, bytes_2d_b, n_fit_bins):
 
     ax1.set_ylabel('N')
     ax1.stairs(bias_hist_a, bias_bins_a, color='black', lw=1.5, label=lbl_bias_a)
-    ax1.plot(bias_bins_mid_a, bias_hist_fit_a, color='black', lw=1, ls='--') 
+    ax1.plot(bias_bins_mid_a, bias_hist_fit_a, color='black', lw=1, ls='--')
     ax1.errorbar(bias_bins_mid_a, bias_hist_fit_a, 1.96 * bias_err_fit_a, color='black', lw=1, ls='none', capsize=2, marker='o', ms=1)
     ymin_1, ymax_1 = ax1.get_ylim()
     ax1.set_ylim(ymin_1, 1.15 * ymax_1)
@@ -289,7 +289,7 @@ def bytes_detailed_test(bytes_2d_a, bytes_2d_b, n_fit_bins):
 
     ax3.set_ylabel('N')
     ax3.stairs(chi2_hist_a, chi2_bins_a, color='black', lw=1.5, label=lbl_chi2_a)
-    ax3.plot(chi2_bins_mid_a, chi2_hist_fit_a, color='black', lw=1, ls='--') 
+    ax3.plot(chi2_bins_mid_a, chi2_hist_fit_a, color='black', lw=1, ls='--')
     ax3.errorbar(chi2_bins_mid_a, chi2_hist_fit_a, 1.96 * chi2_err_fit_a, color='black', lw=1, ls='none', capsize=2, marker='o', ms=1)
     ymin_3, ymax_3 = ax3.get_ylim()
     ax3.set_ylim(ymin_3, 1.15 * ymax_3)
@@ -310,7 +310,7 @@ def bytes_detailed_test(bytes_2d_a, bytes_2d_b, n_fit_bins):
 
     ax5.set_ylabel('N')
     ax5.stairs(sc_hist_a, sc_bins_a, color='black', lw=1.5, label=lbl_sc_a)
-    ax5.plot(sc_bins_mid_a, sc_hist_fit_a, color='black', lw=1, ls='--') 
+    ax5.plot(sc_bins_mid_a, sc_hist_fit_a, color='black', lw=1, ls='--')
     ax5.errorbar(sc_bins_mid_a, sc_hist_fit_a, 1.96 * sc_err_fit_a, color='black', lw=1, ls='none', capsize=2, marker='o', ms=1)
     ymin_5, ymax_5 = ax5.get_ylim()
     ax5.set_ylim(ymin_5, 1.2 * ymax_5)

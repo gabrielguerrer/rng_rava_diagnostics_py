@@ -39,6 +39,7 @@ pip install rng_rava_diag
 
 Requirements: [rng_rava](https://github.com/gabrielguerrer/rng_rava_driver_py), [numpy](https://github.com/numpy/numpy),
 [matplotlib](https://github.com/matplotlib/matplotlib), [scipy](https://github.com/scipy/scipy), [lmfit](https://github.com/lmfit/lmfit-py) 
+- Windows: [Microsoft Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version)  <br><br>
 
 
 To run the diagnostics app, execute:
@@ -51,15 +52,11 @@ python3 -m rng_rava_diag
 </a>
 
 
-## Documentation
-
-- [RAVA Python Diagnostics - Statistical Tests](https://github.com/gabrielguerrer/rng_rava_diagnostics_py/wiki/Statistical-Tests)
-
-
 ## Driver Compatibility
 
 Regarding the [RAVA Python Driver](https://github.com/gabrielguerrer/rng_rava_driver_py): 
-* Driver v1.1.0 to latest is compatible with Diagnostics from v1.0.0 to latest
+- Diagnostics version v1.0.0 is compatible with Driver v1.1.0
+- Diagnostics versions >= v1.1.0 are compatible with Driver >= v1.2.1
 
 
 ## Associated projects

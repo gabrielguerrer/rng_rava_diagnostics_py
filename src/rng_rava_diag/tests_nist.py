@@ -5,7 +5,7 @@ Distributed under the MIT license - See LICENSE for details
 """
 
 """
-This file encompasses the code of the NIST's results visualization performed 
+This file encompasses the code of the NIST's results visualization performed
 by the Detailed Tests sub-app.
 """
 
@@ -25,11 +25,11 @@ def nist_eval(filename_report):
     # Read file
     with open(filename_report, 'r') as f:
         nist_data = f.readlines()
-    
+
     # Extract ranges
     range_tests = get_txt_par(nist_data[199], 'is approximately = ',  'for a')
     n_stream = get_txt_par(nist_data[200], 'sample size = ',  'binary sequences')
-    
+
     range_randome = get_txt_par(nist_data[203], 'is approximately = ',  'for a')
     n_randome = get_txt_par(nist_data[203], 'sample size = ',  'binary sequences')
 
@@ -42,15 +42,15 @@ def nist_eval(filename_report):
     tests = []
     for i in range(n_tests):
         line_data = tests_data[i].split(' ')
-        
+
         while '' in line_data:
             line_data.remove('')
 
         test = line_data[12].replace('\n', '')
         tests.append(test)
-        
+
         ps[i] = float(line_data[10])
-        props[i] = float(line_data[11].split('/')[0]) 
+        props[i] = float(line_data[11].split('/')[0])
 
         if test in ['RandomExcursions', 'RandomExcursionsVariant']:
             props[i] /= n_randome
@@ -108,7 +108,7 @@ def nist_test(file_report_a, file_report_b):
     'Non Overlap. Temp. (148)',
     'Random Exc. (8)',
     'Random Exc. Variant (18)'
-    ]    
+    ]
 
     # RNG A Data
     ps_a, props_a, tests_a, n_stream_a, n_randome_a, range_tests_a, range_randome_a = nist_eval(file_report_a)
@@ -152,16 +152,3 @@ def nist_test(file_report_a, file_report_b):
     ax2.hlines([.0001, 1.], 0, 15, ls='dotted', color='black', lw=1)
 
     return fig
-
-
-def nist_run(self):
-    import signal
-    import subprocess 
-    command = '/home/gg/Downloads/RANDOMNESS/sts-2.1.2_1/assess 10' 
-    process = subprocess.Popen(command.split(),stdout=subprocess.PIPE,stdin=subprocess.PIPE) 
-
-    process.stdout.readlines()
-    process.stdin.write(b'0\n')
-    process.stdin.write(b'0\n')
-
-    process.send_signal(signal.CTRL_C_EVENT)
