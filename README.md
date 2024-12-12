@@ -47,16 +47,22 @@ To run the diagnostics app, execute:
 python3 -m rng_rava_diag
 ```
 
-<a href="https://github.com/gabrielguerrer/rng_rava_diagnostics_py/blob/main/images/rava_diagnostics.png">
-<img src="https://github.com/gabrielguerrer/rng_rava_diagnostics_py/blob/main/images/rava_diagnostics.png" width="800">
+<a href="https://github.com/gabrielguerrer/rng_rava_diag_py/blob/main/images/rava_diagnostics.png">
+<img src="https://github.com/gabrielguerrer/rng_rava_diag_py/blob/main/images/rava_diagnostics.png" width="800">
 </a>
+
+
+## Documentation
+
+- [RAVA Python Diagnostics - Statistical Tests](https://github.com/gabrielguerrer/rng_rava_diag_py/wiki/Statistical-Tests)
 
 
 ## Driver Compatibility
 
 Regarding the [RAVA Python Driver](https://github.com/gabrielguerrer/rng_rava_driver_py): 
 - Diagnostics version v1.0.0 is compatible with Driver v1.1.0
-- Diagnostics versions >= v1.1.0 are compatible with Driver >= v1.2.1
+- Diagnostics version v1.1.0 is compatible with Driver v1.2.1
+- Diagnostics versions >= v1.3.0 are compatible with Driver >= v2.0.0
 
 
 ## Associated projects

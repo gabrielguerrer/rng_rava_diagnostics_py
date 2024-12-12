@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rng_rava_diag"
-version = "1.1.0"
+version = "1.2.0"
 authors = [
   { name="Gabriel Guerrer", email="gabrielguerrer@gmail.com" },
 ]
@@ -12,7 +12,7 @@ description = "RAVA Python Diagnostics"
 readme = "README.md"
 requires-python = ">=3.7"
 dependencies = [    
-    "rng_rava ~= 1.2.1",
+    "rng_rava >= 2.0.0",
     "numpy",
     "matplotlib",
     "scipy",
@@ -25,4 +25,4 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/gabrielguerrer/rng_rava_diagnostics_py"
+"Homepage" = "https://github.com/gabrielguerrer/rng_rava_diag_py"

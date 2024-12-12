@@ -21,7 +21,7 @@ import tkinter.messagebox as tkm
 import numpy as np
 import matplotlib.pyplot as plt
 
-from rng_rava import D_RNG_POSTPROC, D_PWM_FREQ
+from rng_rava import D_RNG_POSTPROC, D_PWM_BOOST_FREQ
 from rng_rava.tk import RAVA_SUBAPP
 from rng_rava.tk.acq import WIN_PROGRESS
 from rng_rava.acq import RAVA_ACQUISITION, get_ammount_prefix_number
@@ -247,7 +247,7 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
         self.lb_pwm_freq = ttk.Label(self.frm_pwm, text='PWM Frequency')
         self.lb_pwm_freq.grid(row=1, column=0, sticky='w', padx=(2*PAD,0))
 
-        pwm_freqs = list(D_PWM_FREQ.keys())
+        pwm_freqs = list(D_PWM_BOOST_FREQ.keys())
         self.cbb_pwm_freq = ttk.Combobox(self.frm_pwm, width=10)
         self.cbb_pwm_freq.grid(row=1, column=1, columnspan=2, sticky='w')
         self.cbb_pwm_freq.state(['readonly'])
@@ -300,7 +300,7 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
         self.lg.info('{}: Pulse Count - Distribution Test'.format(self.name))
 
         # Get RNG setup str
-        pwm_setup = self.rng.get_pwm_setup()
+        pwm_setup = self.rng.get_pwm_boost_setup()
         rng_setup = self.rng.get_rng_setup()
         rng_setup_str = 'PWM freq={} duty={}, RNG SI={}us'.format(pwm_setup['freq_str'], pwm_setup['duty'], rng_setup['sampling_interval_us'])
 
@@ -432,7 +432,7 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
 
 
     def pwm_freq_sel(self, tk_event=None):
-        pwm_freqs = list(D_PWM_FREQ.keys())
+        pwm_freqs = list(D_PWM_BOOST_FREQ.keys())
         if self.cbb_pwm_freq.get() in [pwm_freqs[0], pwm_freqs[1]]:
             self.var_pwm_dc_min.set(4)
             self.var_pwm_dc_max.set(20)
@@ -446,7 +446,7 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
     def pwm_test(self):
         # Read vars
         pwm_freq = self.cbb_pwm_freq.get()
-        pwm_freq_id = D_PWM_FREQ[pwm_freq]
+        pwm_freq_id = D_PWM_BOOST_FREQ[pwm_freq]
 
         pwm_dc_min = self.var_pwm_dc_min.get()
         pwm_dc_max = self.var_pwm_dc_max.get()
@@ -472,7 +472,7 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
 
         # Get RNG initial config
         si_init = self.rng.get_rng_setup()
-        pwm_init = self.rng.get_pwm_setup()
+        pwm_init = self.rng.get_pwm_boost_setup()
         del pwm_init['freq_str']
 
         # Configure RNG Sampling interval
@@ -486,7 +486,7 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
             for i, dc in enumerate(pwm_dc_range):
 
                 # Configure PWM
-                self.rng.snd_pwm_setup(freq_id=pwm_freq_id, duty=dc)
+                self.rng.snd_pwm_boost_setup(freq_id=pwm_freq_id, duty=dc)
 
                 # Generate PCs
                 pcs_a[i], pcs_b[i] = self.rng.get_rng_pulse_counts(n_counts=n_pcs, output_type='array', timeout=None)
@@ -501,7 +501,7 @@ class RAVA_SUBAPP_QUICK_TESTS(RAVA_SUBAPP):
 
         # Restore RNG initial config
         self.rng.snd_rng_setup(**si_init)
-        self.rng.snd_pwm_setup(**pwm_init)
+        self.rng.snd_pwm_boost_setup(**pwm_init)
 
         # Close progress window
         self.win_progress.hide()
