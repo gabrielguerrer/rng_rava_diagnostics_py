@@ -47,8 +47,8 @@ To run the diagnostics app, execute:
 python3 -m rng_rava_diag
 ```
 
-<a href="https://github.com/gabrielguerrer/rng_rava_diag_py/blob/main/images/rava_diagnostics.png">
-<img src="https://github.com/gabrielguerrer/rng_rava_diag_py/blob/main/images/rava_diagnostics.png" width="800">
+<a href="https://github.com/gabrielguerrer/rng_rava_diagnostics_py/blob/main/images/rava_diagnostics.png">
+<img src="https://github.com/gabrielguerrer/rng_rava_diagnostics_py/blob/main/images/rava_diagnostics.png" width="800">
 </a>
 
 
